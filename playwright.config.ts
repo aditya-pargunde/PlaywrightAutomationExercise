@@ -7,7 +7,7 @@ export default defineConfig({
 
   use: {
     baseURL: 'https://automationexercise.com',
-    browserName: 'webkit',
+    browserName: 'chromium',
     headless: true,
     viewport: null,
     launchOptions: {
