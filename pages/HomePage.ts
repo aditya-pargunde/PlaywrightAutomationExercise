@@ -10,7 +10,8 @@ export class HomePage extends BasePage {
     readonly accountDeletionConfirmationMessage: Locator;
     readonly logoutLink: Locator;
     readonly cartLink: Locator;
-    
+    readonly testCaseLink: Locator;
+
     constructor(page: Page) {
 
         super(page);
@@ -20,6 +21,7 @@ export class HomePage extends BasePage {
         this.accountDeletionConfirmationMessage = page.locator(HomePageLocators.accountDeletionConfirmationMessage);
         this.logoutLink = page.locator(HomePageLocators.logoutLink);
         this.cartLink = page.locator(HomePageLocators.cartLink);
+        this.testCaseLink = page.locator(HomePageLocators.testCaseLink);
     }
 
     async navigateToProductsPage() {
@@ -41,5 +43,9 @@ export class HomePage extends BasePage {
 
     async getAccountDeletionMessage() {
         return await this.accountDeletionConfirmationMessage.textContent()
+    }
+
+    async goToTestCasesPage() {
+        await this.testCaseLink.click();
     }
 }
