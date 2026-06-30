@@ -25,26 +25,37 @@ const testData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'Regis
 
 for (const data of testData) {
 
-    test(`TC 1 - User Signup Test`, async ({ page }) => {
+   test(`TC 1 - User Signup Test`, async ({ page }) => {
 
-        const loginPage = new LoginPage(page);
-        const signupPage = new SignupPage(page);
-        const homePage = new HomePage(page);
+    const loginPage = new LoginPage(page);
+    const signupPage = new SignupPage(page);
+    const homePage = new HomePage(page);
 
+    await test.step('Launch Automation Exercise application', async () => {
         await page.goto('https://automationexercise.com/');
+    });
+
+    await test.step('Navigate to Login / Signup page', async () => {
         await loginPage.navigateToLoginPage();
+    });
+
+    await test.step('Enter signup details', async () => {
         await signupPage.enterSignupDetails(
             data['Name'],
             data['Email'].toString()
         );
+    });
 
+    await test.step('Fill account information', async () => {
         await signupPage.fillAccountInformation(
             data['Password'].toString(),
             data['Day'].toString(),
             data['Month'].toString(),
             data['Year'].toString()
         );
+    });
 
+    await test.step('Fill address information', async () => {
         await signupPage.fillAddressInformation(
             data['First Name'],
             data['Last Name'],
@@ -55,10 +66,23 @@ for (const data of testData) {
             data['Zipcode'].toString(),
             data['Mobile number'].toString()
         );
-        
-        await signupPage.clickCreateAccountButton();    
+    });
+
+    await test.step('Create account', async () => {
+        await signupPage.clickCreateAccountButton();
+    });
+
+    await test.step('Continue after account creation', async () => {
         await signupPage.clickContinueButton();
+    });
+
+    await test.step('Delete account', async () => {
         await homePage.clickDeleteAccount();
+    });
+
+    await test.step('Verify account deletion', async () => {
         await homePage.getAccountDeletionMessage();
     });
+
+});
 }

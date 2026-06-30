@@ -37,79 +37,108 @@ import { ExcelUtils } from '../utils/ExcelUtils';
 
 test.describe('@sanity', () => {
 
-const userData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'RegisterUsers');
-const cardData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'CardDetails');
+    const userData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'RegisterUsers');
+    const cardData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'CardDetails');
 
-for (let i = 0; i < userData.length; i++) {
+    for (let i = 0; i < userData.length; i++) {
 
-    const user = userData[i];
-    const card = cardData[i];
+        const user = userData[i];
+        const card = cardData[i];
 
-    test(`TC 14 - Place Order: Register while Checkout Test`, async ({ page }) => {
+        test(`TC 14 - Place Order: Register while Checkout Test`, async ({ page }) => {
 
-        const loginPage = new LoginPage(page);
-        const signupPage = new SignupPage(page);
-        const homePage = new HomePage(page);
-        const cartPage = new CartPage(page);
-        const productsPage = new ProductsPage(page);
-        const checkoutPage = new CheckoutPage(page);
-        const paymentPage = new PaymentPage(page);
-        const orderConfirmationPage = new OrderConfirmationPage(page);
+            const loginPage = new LoginPage(page);
+            const signupPage = new SignupPage(page);
+            const homePage = new HomePage(page);
+            const cartPage = new CartPage(page);
+            const productsPage = new ProductsPage(page);
+            const checkoutPage = new CheckoutPage(page);
+            const paymentPage = new PaymentPage(page);
+            const orderConfirmationPage = new OrderConfirmationPage(page);
 
-        await page.goto('https://automationexercise.com/');
+            await test.step('Launch Automation Exercise application', async () => {
+                await page.goto('https://automationexercise.com/');
+            });
 
-        await productsPage.goToProductsPage();
-        await productsPage.searchProduct('Blue Top');
-        await productsPage.hoverAndAddProductToCart('Blue Top');
+            await test.step('Search and add product to cart', async () => {
+                await productsPage.goToProductsPage();
+                await productsPage.searchProduct('Blue Top');
+                await productsPage.hoverAndAddProductToCart('Blue Top');
+                await productsPage.verifyCartAdditionAndGoToCart();
+            });
 
-        await productsPage.verifyCartAdditionAndGoToCart();
+            await test.step('Verify product in cart and proceed to checkout', async () => {
+                await cartPage.verifyProductsInCart('Blue Top');
+                await cartPage.proceedToCheckout();
+                await cartPage.verifyLoginOnCheckout();
+            });
 
-        await cartPage.verifyProductsInCart('Blue Top');
-        await cartPage.proceedToCheckout();
-        await cartPage.verifyLoginOnCheckout();
+            await test.step('Register a new user during checkout', async () => {
+                await signupPage.enterSignupDetails(
+                    user['Name'],
+                    user['Email'].toString()
+                );
 
-        await signupPage.enterSignupDetails(
-            user['Name'],
-            user['Email'].toString()
-        );
+                await signupPage.fillAccountInformation(
+                    user['Password'].toString(),
+                    user['Day'].toString(),
+                    user['Month'].toString(),
+                    user['Year'].toString()
+                );
 
-        await signupPage.fillAccountInformation(
-            user['Password'].toString(),
-            user['Day'].toString(),
-            user['Month'].toString(),
-            user['Year'].toString()
-        );
+                await signupPage.fillAddressInformation(
+                    user['First Name'],
+                    user['Last Name'],
+                    user['Address'],
+                    user['Country'],
+                    user['State'],
+                    user['City'],
+                    user['Zipcode'].toString(),
+                    user['Mobile number'].toString()
+                );
 
-        await signupPage.fillAddressInformation(
-            user['First Name'],
-            user['Last Name'],
-            user['Address'],
-            user['Country'],
-            user['State'],
-            user['City'],
-            user['Zipcode'].toString(),
-            user['Mobile number'].toString()
-        );
+                await signupPage.clickCreateAccountButton();
+                await signupPage.clickContinueButton();
+            });
 
-        await signupPage.clickCreateAccountButton();
-        await signupPage.clickContinueButton();
-        await homePage.navigateToCartPage();
-        await cartPage.proceedToCheckout();
-        await checkoutPage.compareAddresses();
-        await checkoutPage.reviewOrder();
-        await checkoutPage.verifyPlaceOrder();
-        await paymentPage.fillPaymentDetails(
-            card['Name'].toString(),
-            card['Card Number'].toString(),
-            card['CVC'].toString(),
-            card['Expiry Month'].toString(),
-            card['Expiry Year'].toString()
-        );
-        await paymentPage.clickPayAndConfirmOrderButton();
-        await orderConfirmationPage.verifyOrderConfirmation();
-        await orderConfirmationPage.verifyDownloadInvoiceLink();
-        await homePage.clickDeleteAccount();
-        await expect(homePage.accountDeletedHeader).toBeVisible();
-    });
-}
+            await test.step('Navigate back to cart and proceed to checkout', async () => {
+                await homePage.navigateToCartPage();
+                await cartPage.proceedToCheckout();
+            });
+
+            await test.step('Verify delivery and billing addresses', async () => {
+                await checkoutPage.compareAddresses();
+            });
+
+            await test.step('Review order and place the order', async () => {
+                await checkoutPage.reviewOrder();
+                await checkoutPage.verifyPlaceOrder();
+            });
+
+            await test.step('Enter payment details', async () => {
+                await paymentPage.fillPaymentDetails(
+                    card['Name'].toString(),
+                    card['Card Number'].toString(),
+                    card['CVC'].toString(),
+                    card['Expiry Month'].toString(),
+                    card['Expiry Year'].toString()
+                );
+            });
+
+            await test.step('Complete payment', async () => {
+                await paymentPage.clickPayAndConfirmOrderButton();
+            });
+
+            await test.step('Verify order confirmation and invoice download', async () => {
+                await orderConfirmationPage.verifyOrderConfirmation();
+                await orderConfirmationPage.verifyDownloadInvoiceLink();
+            });
+
+            await test.step('Delete the account and verify deletion', async () => {
+                await homePage.clickDeleteAccount();
+                await expect(homePage.accountDeletedHeader).toBeVisible();
+            });
+        });
+    }
+
 });

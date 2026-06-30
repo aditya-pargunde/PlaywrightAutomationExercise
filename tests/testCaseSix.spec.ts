@@ -21,26 +21,44 @@ import { ExcelUtils } from '../utils/ExcelUtils';
 
 test.describe('@sanity', () => {
 
-const Data: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'UserLogout');
+    const Data: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'UserLogout');
 
-test('TC 6 - Contact Us Form Test', async ({ page }) => {
-    const basePage = new BasePage(page);
-    const contactUsPage = new ContactUsPage(page);
+    test('TC 6 - Contact Us Form Test', async ({ page }) => {
 
-    await page.goto('https://automationexercise.com/');
-    // await expect(basePage.homeLink).toBeVisible();
-    await basePage.clickElement(basePage.contactUsLink);
-    await expect(contactUsPage.contactUsHeader).toBeVisible();
-    await contactUsPage.enterFormDetails(
-        Data[0]['Name'].toString(),
-        Data[0]['Email'].toString(),
-        'Test Subject',
-        'This is a test message.'
-    );
-    await contactUsPage.verifyFileUpload('./test-data/invoice.txt');
-    await contactUsPage.submitForm();
-    await contactUsPage.verifySuccessMessage();
-});
+        const basePage = new BasePage(page);
+        const contactUsPage = new ContactUsPage(page);
+
+        await test.step('Launch Automation Exercise application', async () => {
+            await page.goto('https://automationexercise.com/');
+        });
+
+        await test.step('Navigate to Contact Us page', async () => {
+            await basePage.clickElement(basePage.contactUsLink);
+            await expect(contactUsPage.contactUsHeader).toBeVisible();
+        });
+
+        await test.step('Enter contact form details', async () => {
+            await contactUsPage.enterFormDetails(
+                Data[0]['Name'].toString(),
+                Data[0]['Email'].toString(),
+                'Test Subject',
+                'This is a test message.'
+            );
+        });
+
+        await test.step('Upload file attachment', async () => {
+            await contactUsPage.verifyFileUpload('./test-data/invoice.txt');
+        });
+
+        await test.step('Submit the contact form', async () => {
+            await contactUsPage.submitForm();
+        });
+
+        await test.step('Verify success message', async () => {
+            await contactUsPage.verifySuccessMessage();
+        });
+
+    });
 });
 
 

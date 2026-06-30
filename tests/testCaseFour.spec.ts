@@ -19,27 +19,49 @@ import { ExcelUtils } from '../utils/ExcelUtils';
 
 test.describe('@sanity', () => {
 
-const testData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'UserLogout');
+    const testData: any[] = ExcelUtils.getSheetData(
+        './test-data/users.xlsx',
+        'UserLogout'
+    );
 
-for (const data of testData) {
+    for (const data of testData) {
 
-    test(`TC 4 - User Logout Test`, async ({ page }) => {
+        test('TC 4 - User Logout Test', async ({ page }) => {
 
-        const loginPage = new LoginPage(page);
-        const signupPage = new SignupPage(page);
-        const homePage = new HomePage(page);
+            const loginPage = new LoginPage(page);
+            const signupPage = new SignupPage(page);
+            const homePage = new HomePage(page);
 
-        await page.goto('https://automationexercise.com/');
-        await loginPage.navigateToLoginPage();
-        await loginPage.login(
-            data['Email'].toString(),
-            data['Password'].toString()
-        );
-        await expect(loginPage.logoutLink).toBeVisible();
-        await Promise.all([
-           // page.waitForURL('/login'),
-            loginPage.logoutLink.click()
-        ]);
-    });
-}
+            await test.step('Launch Automation Exercise application', async () => {
+                await page.goto('https://automationexercise.com/');
+            });
+
+            await test.step('Navigate to Login page', async () => {
+                await loginPage.navigateToLoginPage();
+            });
+
+            await test.step('Login with valid credentials', async () => {
+                await loginPage.login(
+                    data['Email'].toString(),
+                    data['Password'].toString()
+                );
+            });
+
+            await test.step('Verify Logout button is visible', async () => {
+                await expect(loginPage.logoutLink).toBeVisible();
+            });
+
+            await test.step('Click Logout button', async () => {
+                await Promise.all([
+                    page.waitForURL('**/login'),
+                    loginPage.logoutLink.click()
+                ]);
+            });
+
+            await test.step('Verify user is redirected to Login page', async () => {
+                await expect(page).toHaveURL(/.*login/);
+            });
+
+        });
+    }
 });

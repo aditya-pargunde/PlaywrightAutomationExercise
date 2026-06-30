@@ -25,35 +25,46 @@ import { OrderConfirmationPage } from '../pages/OrderConfirmationPage';
 
 test.describe('@regression', () => {
 
-test('TC 12 - Should add products to cart and verify details', async ({ page }) => {
+    test('TC 12 - Should add products to cart and verify details', async ({ page }) => {
 
-    const productsPage = new ProductsPage(page);
-    const cartPage = new CartPage(page);
+        const productsPage = new ProductsPage(page);
+        const cartPage = new CartPage(page);
 
-    await page.goto('https://automationexercise.com/');
-    await productsPage.goToProductsPage();
+        let firstProduct: string;
+        let secondProduct: string;
 
-    // Get all product titles
-    const productTitles = await productsPage.getAllProductTitles();
+        await test.step('Launch Automation Exercise application', async () => {
+            await page.goto('https://automationexercise.com/');
+        });
 
-    // Pick first and second product dynamically
-    const firstProduct = productTitles[0];
-    const secondProduct = productTitles[1];
+        await test.step('Navigate to Products page', async () => {
+            await productsPage.goToProductsPage();
+        });
 
-    console.log('First Product:', firstProduct);
-    console.log('Second Product:', secondProduct);
+        await test.step('Retrieve available product names', async () => {
+            const productTitles = await productsPage.getAllProductTitles();
 
-    // Add first product
-    await productsPage.hoverAndAddProductToCart(firstProduct);
-    await productsPage.verifyCartAdditionAndContinueShopping();
+            firstProduct = productTitles[0];
+            secondProduct = productTitles[1];
 
-    // Add second product
-    await productsPage.hoverAndAddProductToCart(secondProduct);
-    await productsPage.verifyCartAdditionAndGoToCart();
+            console.log('First Product:', firstProduct);
+            console.log('Second Product:', secondProduct);
+        });
 
-    // Verify cart products
-    await cartPage.verifyProductsInCart(firstProduct);
-    await cartPage.verifyProductsInCart(secondProduct);
+        await test.step('Add first product to cart', async () => {
+            await productsPage.hoverAndAddProductToCart(firstProduct);
+            await productsPage.verifyCartAdditionAndContinueShopping();
+        });
 
-});
+        await test.step('Add second product to cart', async () => {
+            await productsPage.hoverAndAddProductToCart(secondProduct);
+            await productsPage.verifyCartAdditionAndGoToCart();
+        });
+
+        await test.step('Verify both products are displayed in the cart', async () => {
+            await cartPage.verifyProductsInCart(firstProduct);
+            await cartPage.verifyProductsInCart(secondProduct);
+        });
+
+    });
 });

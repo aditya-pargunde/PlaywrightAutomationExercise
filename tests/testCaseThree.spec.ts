@@ -17,23 +17,33 @@ import { ExcelUtils } from '../utils/ExcelUtils';
 
 test.describe('@regression', () => {
 
-const testData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'InvalidLoginUsers');
+    const testData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'InvalidLoginUsers');
 
-for (const data of testData) {
+    for (const data of testData) {
 
-    test(`TC 3 - User Login with Invalid Credentials Test`, async ({ page }) => {
+        test(`TC 3 - User Login with Invalid Credentials Test`, async ({ page }) => {
 
-        const loginPage = new LoginPage(page);
-        const signupPage = new SignupPage(page);
-        const homePage = new HomePage(page);
+            const loginPage = new LoginPage(page);
 
-        await page.goto('https://automationexercise.com/');
-        await loginPage.navigateToLoginPage();
-        await loginPage.login(
-            data['Email'].toString(),
-            data['Password'].toString()
-        );
-     await expect(loginPage.getLoginErrorMessage()).toBeVisible();
-    });
-}
+            await test.step('Launch Automation Exercise application', async () => {
+                await page.goto('https://automationexercise.com/');
+            });
+
+            await test.step('Navigate to Login page', async () => {
+                await loginPage.navigateToLoginPage();
+            });
+
+            await test.step('Login with invalid credentials', async () => {
+                await loginPage.login(
+                    data['Email'].toString(),
+                    data['Password'].toString()
+                );
+            });
+
+            await test.step('Verify login error message is displayed', async () => {
+                await expect(loginPage.getLoginErrorMessage()).toBeVisible();
+            });
+
+        });
+    }
 });
