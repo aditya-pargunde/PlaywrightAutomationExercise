@@ -1,6 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 
-import { ContactUsPageLocators } from '../locators/ContactUsPageLocators';
+import { ContactUsPageLocators } from '../Locators/ContactUsPageLocators';
 
 export class ContactUsPage {
 
