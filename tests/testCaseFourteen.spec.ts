@@ -35,7 +35,7 @@ import { PaymentPage } from '../pages/PaymentPage';
 import { OrderConfirmationPage } from '../pages/OrderConfirmationPage';
 import { ExcelUtils } from '../utils/ExcelUtils';
 
-test.describe('@sanity @regression', () => {
+test.describe('@sanity', () => {
 
 const userData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'RegisterUsers');
 const cardData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'CardDetails');

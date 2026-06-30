@@ -15,7 +15,7 @@ import { SignupPage } from '../pages/SignupPage';
 import { HomePage } from '../pages/HomePage';
 import { ExcelUtils } from '../utils/ExcelUtils';
 
-test.describe('@sanity @regression', () => {
+test.describe('@regression', () => {
 
 const testData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'InvalidLoginUsers');
 

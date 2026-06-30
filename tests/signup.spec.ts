@@ -4,7 +4,7 @@ import { SignupPage } from '../pages/SignupPage';
 import { HomePage } from '../pages/HomePage';
 import { ExcelUtils } from '../utils/ExcelUtils';
 
-test.describe('@smoke @regression', () => {
+test.describe('@smoke', () => {
 const testData: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'RegisterUsers');
 
 for (const data of testData) {

@@ -3,9 +3,9 @@ import { ProductsPage } from '../pages/ProductsPage';
 import { CartPage } from '../pages/CartPage';
 import { ProductsPageLocators } from '../Locators/ProductsPageLocators';
 
-test.describe('@smoke @regression', () => {
+test.describe('@smoke', () => {
 
-test('Search product and add to cart Test', async ({ page }) => {
+test('Verify all categories', async ({ page }) => {
 
     const productsPage = new ProductsPage(page);
     const cartPage = new CartPage(page);
@@ -20,18 +20,15 @@ test('Search product and add to cart Test', async ({ page }) => {
     await productsPage.verifyCategoriesSidebar();
 
     //verify all women sub categories are visible and clickable
-    //await productsPage.expandWomenCategory();
     await productsPage.openWomenDressesCategory();
     await productsPage.openWomenTopsCategory();
     await productsPage.openWomenSareesCategory();
 
     //verify all men sub categories are visible and clickable
-    //await productsPage.expandMenCategory();
     await productsPage.openMenTshirtsCategory();
     await productsPage.openMenJeansCategory();
 
     //verify all kids sub categories are visible and clickable
-  //  await productsPage.expandKidsCategory();
     await productsPage.openKidsDressCategory();
     await productsPage.openKidsTopsAndShirtsCategory();
 

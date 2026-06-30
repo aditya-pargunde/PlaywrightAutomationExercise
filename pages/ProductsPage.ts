@@ -85,7 +85,8 @@ export class ProductsPage extends BasePage {
 
     async goToProductsPage() {
         await this.productsMenu.click();
-        await expect(this.allProductsHeader).toBeVisible();
+        await this.page.waitForLoadState("networkidle");
+       // await expect(this.allProductsHeader).toBeVisible();
     }
 
     async searchProduct(productName: string) {

@@ -19,7 +19,7 @@ import { BasePage } from '../pages/BasePage';
 import { ContactUsPage } from '../pages/contactUsPage';
 import { ExcelUtils } from '../utils/ExcelUtils';
 
-test.describe('@sanity @regression', () => {
+test.describe('@sanity', () => {
 
 const Data: any[] = ExcelUtils.getSheetData('./test-data/users.xlsx', 'UserLogout');
 

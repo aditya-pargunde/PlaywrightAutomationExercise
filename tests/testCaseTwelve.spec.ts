@@ -23,7 +23,7 @@ import { PaymentPage } from '../pages/PaymentPage';
 import { OrderConfirmationPage } from '../pages/OrderConfirmationPage';
 
 
-test.describe('@sanity @regression', () => {
+test.describe('@regression', () => {
 
 test('TC 12 - Should add products to cart and verify details', async ({ page }) => {
 
