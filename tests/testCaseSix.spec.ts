@@ -16,7 +16,7 @@ import { test } from '../fixtures/adHandler.fixture';
 import { expect } from '@playwright/test';
 
 import { BasePage } from '../pages/BasePage';
-import { ContactUsPage } from '../pages/contactUsPage';
+import { ContactUsPage } from '../pages/ContactUsPage';
 import { ExcelUtils } from '../utils/ExcelUtils';
 
 test.describe('@sanity', () => {
